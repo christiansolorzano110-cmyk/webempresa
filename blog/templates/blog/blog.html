@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Blog - La Cafetería{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <h2 class="mb-4 border-bottom pb-2">Últimas publicaciones</h2>
+
+    {% for post in posts %}
+      <article class="card mb-4 shadow-sm">
+        {% if post.image %}
+          <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="max-height: 400px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+          <h3 class="card-title">{{ post.title }}</h3>
+          <p class="card-text text-muted small">
+            Por <strong>{{ post.author.username }}</strong> | {{ post.published|date:"d \d\e F, Y" }}
+          </p>
+          <div class="card-text mb-3">
+            {{ post.content|linebreaks }}
+          </div>
+          <div>
+            <span class="small text-muted">Categorías:</span>
+            {% for category in post.categories.all %}
+              <a href="{% url 'category' category.id %}" class="badge bg-secondary text-decoration-none">{{ category.name }}</a>
+            {% empty %}
+              <span class="small text-muted">Sin categoría</span>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+    {% empty %}
+      <p class="alert alert-info">Aún no hay publicaciones disponibles en el blog.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
